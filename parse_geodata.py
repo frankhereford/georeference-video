@@ -29,6 +29,12 @@ def drop_gps_table(connection):
         cursor.execute(drop_table_sql)
         connection.commit()
 
+def check_null(value):
+    if value == '(null)':
+        return None
+    else:
+        return value
+
 def create_gps_table(connection):
     create_table_sql = '''
     CREATE TABLE IF NOT EXISTS gps (
@@ -66,16 +72,21 @@ def insert_gps_data(connection, data):
         speed, average_speed, course, true_heading, magnetic_heading,
         heading_accuracy, glide_ratio, heart_rate, geom
     ) VALUES (
-        %(Date(GMT))s, %(Date(Local))s, %(Time(sec))s, %(Latitude)s, %(Longitude)s,
-        %(Horizontal Accuracy(m))s, %(Altitude(m))s, %(Vertical Accuracy(m))s, %(Distance(m))s,
-        %(Speed(m/s))s, %(Average Speed(m/s))s, %(Course(deg))s, %(True Heading(deg))s, %(Magnetic Heading(deg))s,
-        %(Heading Accuracy(deg))s, %(Glide Ratio)s, %(Heart Rate (bpm))s,
-        ST_SetSRID(ST_MakePoint(%(Longitude)s, %(Latitude)s, %(Altitude(m))s), 4326)
+        %(Date_GMT)s, %(Date_Local)s, %(Time_sec)s, %(Latitude)s, %(Longitude)s,
+        %(Horizontal Accuracy_m)s, %(Altitude_m)s, %(Vertical Accuracy_m)s, %(Distance_m)s,
+        %(Speed_m_per_s)s, %(Average Speed_m_per_s)s, %(Course_deg)s, %(True Heading_deg)s, %(Magnetic Heading_deg)s,
+        %(Heading Accuracy_deg)s, %(Glide Ratio)s, %(Heart Rate _bpm)s,
+        ST_SetSRID(ST_MakePoint(%(Longitude)s, %(Latitude)s, %(Altitude_m)s), 4326)
     );
     '''
 
+
     with connection.cursor() as cursor:
         for row in data:
+            row["Time_sec"] = check_null(row["Time_sec"])
+            print(row)
+            print(insert_sql)
+            print(row)
             cursor.execute(insert_sql, row)
         connection.commit()
 
