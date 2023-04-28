@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgis/postgis:latest
+    environment:
+      POSTGRES_USER: frank
+      POSTGRES_PASSWORD: frank
+      POSTGRES_DB: geovideo
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres_config/pg_hba.conf:/etc/postgresql/pg_hba.conf
+
+volumes:
+  pgdata:
