@@ -13,5 +13,11 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./postgres_config/pg_hba.conf:/etc/postgresql/pg_hba.conf
 
+  ffmpeg:
+    image: jrottenberg/ffmpeg:latest
+    container_name: ffmpeg_container
+    volumes:
+      - .:/repo
+
 volumes:
   pgdata:
